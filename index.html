@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto widgets</title>
+    <meta name="description" content="Simple embeddable crypto widgets.">
+    <link rel="stylesheet" href="./styles.css">
+    <link
+    rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>"
+    />
+</head>
+<body>
+    <main>
+        <div id="coins">
+
+        </div>
+    </main>
+</body>
+<script>
+    console.log(`%c ________________________________________
+< mooooooooooooooooooooooooooooooooooooo >
+ ----------------------------------------
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||`, "font-family:monospace")
+
+    console.log ("%cHello %cadventurer! %cDo stop by for a %cchat ❤️",
+            "background-color: #FFFFFF; color: #f7860b",
+            "background-color: #FFFFFF; color: #f40c65",
+            "background-color: #FFFFFF; color: #CD6262",
+            "background-color: #FFFFFF; color: #008ce2");
+
+    
+    fetch(`https://api.coingecko.com/api/v3/coins/shiba-inu?tickers=false&community_data=false&developer_data=false&sparkline=false`)
+    .then(response => response.json())
+    .then(data => {
+        let div = document.createElement('div');
+        div.setAttribute('class', 'coin-container');
+        div.innerHTML =`
+            <div class='coin-row'>
+                <div class='coin'>
+                    <img src=${data.image.small} alt='Coin image' />
+                    <h4>${data.name}</h4>
+                </div>
+                <div class='coin-data'>
+                    <p class='coin-price'>$${data.market_data.current_price.usd}</p>
+                    <p class='coin-percent'>${data.market_data.price_change_percentage_24h.toFixed(2)}%</p>
+                    <p class='coin-marketcap'>$${data.market_data.market_cap.usd.toLocaleString()}</p>
+                </div>
+            </div> `;
+        document.getElementById("coins").appendChild(div);
+    })
+    .then(() => {setColours();})//TODO This is being called every time, make it run only after the forEach ends.
+    .catch(error => console.log(error))
+
+function setColours(){
+  var changes = document.querySelectorAll(".coin-percent")
+  changes.forEach(change =>{
+    (parseInt(change.innerText) < 0 ? change.classList.add('red') : change.classList.add('green')); 
+  })
+}
+</script>
+</html>
