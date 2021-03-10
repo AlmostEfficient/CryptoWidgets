@@ -14,7 +14,8 @@
 <body>
     <main>
         <div id="coins">
-
+            <button id="btn1" class="input">Bitcoin</button>
+            <button id="btn2" class="input">Shiba Inu</button>
         </div>
     </main>
 </body>
@@ -33,9 +34,28 @@
             "background-color: #FFFFFF; color: #f40c65",
             "background-color: #FFFFFF; color: #CD6262",
             "background-color: #FFFFFF; color: #008ce2");
-
     
-    fetch(`https://api.coingecko.com/api/v3/coins/shiba-inu?tickers=false&community_data=false&developer_data=false&sparkline=false`)
+    // Button adds new content
+    // but is should REPLACE
+    var btnOne = document.getElementById('btn1')
+    var btnTwo = document.getElementById('btn2')
+    var tmp = "bitcoin"
+
+    btnOne.addEventListener("click", touchme)
+    btnOne.myparam = "bitcoin"
+
+    btnTwo.addEventListener("click", touchme)
+    btnTwo.myparam = "shiba-inu"
+
+    function touchme(evt){
+    if (evt.currentTarget.myparam === "bitcoin"){
+        tmp = "bitcoin"
+    } else {
+        tmp = "shiba-inu"
+    }
+    var url = `https://api.coingecko.com/api/v3/coins/${tmp}?tickers=false&community_data=false&developer_data=false&sparkline=false`
+    console.log(url)
+    fetch(url)
     .then(response => response.json())
     .then(data => {
         let div = document.createElement('div');
@@ -47,15 +67,16 @@
                     <h4>${data.name}</h4>
                 </div>
                 <div class='coin-data'>
-                    <p class='coin-price'>$${data.market_data.current_price.usd}</p>
-                    <p class='coin-percent'>${data.market_data.price_change_percentage_24h.toFixed(2)}%</p>
-                    <p class='coin-marketcap'>$${data.market_data.market_cap.usd.toLocaleString()}</p>
+                    <p class='coin-price'>Coin Price: $${data.market_data.current_price.usd}</p>
+                    <p class='coin-percent'>Coin Percent: ${data.market_data.price_change_percentage_24h.toFixed(2)}%</p>
+                    <p class='coin-marketcap'>Coin Marketcap: $${data.market_data.market_cap.usd.toLocaleString()}</p>
                 </div>
             </div> `;
         document.getElementById("coins").appendChild(div);
     })
     .then(() => {setColours();})//TODO This is being called every time, make it run only after the forEach ends.
     .catch(error => console.log(error))
+    }
 
 function setColours(){
   var changes = document.querySelectorAll(".coin-percent")
@@ -63,5 +84,7 @@ function setColours(){
     (parseInt(change.innerText) < 0 ? change.classList.add('red') : change.classList.add('green')); 
   })
 }
+
+
 </script>
 </html>
