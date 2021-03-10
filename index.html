@@ -13,9 +13,9 @@
 </head>
 <body>
     <main>
+        <button id="btn1" class="input">Bitcoin</button>
+        <button id="btn2" class="input">Shiba Inu</button>
         <div id="coins">
-            <button id="btn1" class="input">Bitcoin</button>
-            <button id="btn2" class="input">Shiba Inu</button>
         </div>
     </main>
 </body>
@@ -60,8 +60,7 @@
     .then(data => {
         let div = document.createElement('div');
         div.setAttribute('class', 'coin-container');
-        div.innerHTML =`
-            <div class='coin-row'>
+        div.innerHTML = `<div id="who" class='coin-row'>
                 <div class='coin'>
                     <img src=${data.image.small} alt='Coin image' />
                     <h4>${data.name}</h4>
@@ -72,7 +71,9 @@
                     <p class='coin-marketcap'>Coin Marketcap: $${data.market_data.market_cap.usd.toLocaleString()}</p>
                 </div>
             </div> `;
-        document.getElementById("coins").appendChild(div);
+        document.getElementById("coins").appendChild(div)
+        document.getElementById("who").replaceWith(div)
+        // console.log(document.getElementById("who"))
     })
     .then(() => {setColours();})//TODO This is being called every time, make it run only after the forEach ends.
     .catch(error => console.log(error))
