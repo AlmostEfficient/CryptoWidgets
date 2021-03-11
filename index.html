@@ -13,79 +13,107 @@
 </head>
 <body>
     <main>
-        <button id="btn1" class="input">Bitcoin</button>
-        <button id="btn2" class="input">Shiba Inu</button>
-        <div id="coins">
+        <div id="search">
+            <label for="searchBar">Ticker</label>
+            <input type="text" id="searchBar" onkeyup="search()" placeholder="BTC, ETH, AAVE, DOGE">
+            <div id="results">
+
+            </div>
+        </div>
+        <div id="coins" style="margin-top: 20px">
+            <div id="coin" style="max-width: 250px;">
+                
+            </div>
         </div>
     </main>
 </body>
 <script>
-    console.log(`%c ________________________________________
-< mooooooooooooooooooooooooooooooooooooo >
- ----------------------------------------
-        \\   ^__^
-         \\  (oo)\\_______
-            (__)\\       )\\/\\
-                ||----w |
-                ||     ||`, "font-family:monospace")
-
-    console.log ("%cHello %cadventurer! %cDo stop by for a %cchat ❤️",
-            "background-color: #FFFFFF; color: #f7860b",
-            "background-color: #FFFFFF; color: #f40c65",
-            "background-color: #FFFFFF; color: #CD6262",
-            "background-color: #FFFFFF; color: #008ce2");
-    
-    // Button adds new content
-    // but is should REPLACE
-    var btnOne = document.getElementById('btn1')
-    var btnTwo = document.getElementById('btn2')
-    var tmp = "bitcoin"
-
-    btnOne.addEventListener("click", touchme)
-    btnOne.myparam = "bitcoin"
-
-    btnTwo.addEventListener("click", touchme)
-    btnTwo.myparam = "shiba-inu"
-
-    function touchme(evt){
-    if (evt.currentTarget.myparam === "bitcoin"){
-        tmp = "bitcoin"
-    } else {
-        tmp = "shiba-inu"
-    }
-    var url = `https://api.coingecko.com/api/v3/coins/${tmp}?tickers=false&community_data=false&developer_data=false&sparkline=false`
-    console.log(url)
-    fetch(url)
+    var coinList = [];
+    var results = document.getElementById("results");
+    document.getElementById("searchBar").addEventListener("keyup", ()=>{
+        if (event.key === 'Enter') {search();}
+    });
+    fetch(`https://api.coingecko.com/api/v3/coins/list`)
     .then(response => response.json())
     .then(data => {
-        let div = document.createElement('div');
-        div.setAttribute('class', 'coin-container');
-        div.innerHTML = `<div id="who" class='coin-row'>
-                <div class='coin'>
-                    <img src=${data.image.small} alt='Coin image' />
-                    <h4>${data.name}</h4>
-                </div>
-                <div class='coin-data'>
-                    <p class='coin-price'>Coin Price: $${data.market_data.current_price.usd}</p>
-                    <p class='coin-percent'>Coin Percent: ${data.market_data.price_change_percentage_24h.toFixed(2)}%</p>
-                    <p class='coin-marketcap'>Coin Marketcap: $${data.market_data.market_cap.usd.toLocaleString()}</p>
-                </div>
-            </div> `;
-        document.getElementById("coins").appendChild(div)
-        document.getElementById("who").replaceWith(div)
-        // console.log(document.getElementById("who"))
+        console.log(typeof(coinList))
+        coinList.push(data);
+        console.log(coinList)
     })
-    .then(() => {setColours();})//TODO This is being called every time, make it run only after the forEach ends.
-    .catch(error => console.log(error))
+
+    function search(){
+        var lookup = document.getElementById("searchBar").value;
+        results.innerHTML = "";
+        coinList[0].forEach(coin => {
+            if (coin.symbol == lookup){
+                console.log(coin)
+                let div = document.createElement('div');
+                div.setAttribute('class', 'coin-container');
+                div.innerHTML = `<a href="#" onclick="widget('${coin.id}');return false;">${coin.id}</a>`
+                results.appendChild(div)
+            }
+            // else if(coin.name.startsWith(lookup)){
+            //     console.log(coin)
+            // }
+        })
     }
 
-function setColours(){
-  var changes = document.querySelectorAll(".coin-percent")
-  changes.forEach(change =>{
-    (parseInt(change.innerText) < 0 ? change.classList.add('red') : change.classList.add('green')); 
-  })
-}
-
+//TODO Check CG total supply vs max supply
+    function widget(id){
+        fetch(`https://api.coingecko.com/api/v3/coins/${id}?tickers=false&community_data=false&developer_data=false&sparkline=false`)
+        .then(response => response.json())
+        .then(data => {
+            let formattedPrice =  (data.market_data.current_price.usd > 10 ? data.market_data.current_price.usd.toLocaleString() : data.market_data.current_price.usd);
+            let maxSupply =  (data.market_data.max_supply == null ? "N/A": data.market_data.max_supply.toLocaleString());
+            let circulatingSupply = (data.market_data.circulating_supply == null ? "N/A": data.market_data.circulating_supply.toLocaleString());
+            let mcap = (data.market_data.market_cap.usd == null ? "N/A": data.market_data.market_cap.usd.toLocaleString());
+            
+            let div = document.createElement('div');
+            div.setAttribute('class', 'top-row');
+            div.innerHTML =`                       
+                <div class="top-row">
+                    <img style="width:32px;height:32px;float:left;" src="${data.image.small}" alt="Coin logo">
+                    <div style="float:left;font-size: 14px;    margin-left: 5px;">${data.name} 
+                        <span style="font-size:10px; color:grey; font-weight:500">[${data.symbol}]</span>
+                        <br>
+                        <span style="font-size: 10px; position: relative;  top:-1px;color: grey;">Rank: ${data.coingecko_rank}</span>
+                    </div>
+                    <div style="font-weight: 700; float:right;">$${formattedPrice}</div>
+                    <br>
+                    <div>
+                        <span style="font-size: 10px; float:right; position:relative; top:3px; color: grey;">24h low / 24h high</span>
+                        <div style="font-size: 12px; margin-top:4px; float:right;">$${data.market_data.low_24h.usd} / $${data.market_data.high_24h.usd}</div>
+                    </div>
+                </div>
+                
+                <div class="middle-row" >
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><span>Market cap</span></td>
+                            <td style="float:right"><span style="font-size: 10px;  color: grey;">24h volume</span></td>
+                        </tr>
+                        <tr>
+                            <td>$${data.market_data.market_cap.usd.toLocaleString()}</td>
+                            <td style="float:right;">$${data.market_data.total_volume.usd.toLocaleString()}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="bottom-row">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><span>Circulating / Total supply</span></td>
+                        </tr>
+                        <tr>
+                            <td>${circulatingSupply} / ${maxSupply}</td>
+                        </tr>
+                    </table>
+                </div>`;
+            document.getElementById("coin").appendChild(div);
+            document.getElementById("searchBar").value = "";
+            results.innerHTML = "";
+        })
+        .catch(error => console.log(error))
+    }
 
 </script>
 </html>
