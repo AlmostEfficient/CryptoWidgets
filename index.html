@@ -21,44 +21,8 @@
             </div>
         </div>
         <div id="coins" style="margin-top: 20px">
-            <div class="coin" style="max-width: 250px;">
-                <div class="top-row">
-                    <img style="width:32px;height:32px;float:left;" src="https://assets.coingecko.com/coins/images/12833/small/unifund_logo.png?1602859047" alt="Coin logo">
-                    <div style="float:left;font-size: 14px;    margin-left: 5px;">Unifund 
-                        <span style="font-size:10px; color:grey; font-weight:500">[IFUND]</span>
-                        <br>
-                        <span style="font-size: 10px; position: relative;  top:-1px;color: grey;">Rank: 239</span>
-                    </div>
-                    <div style="font-weight: 600; float:right;">$1.36</div>
-                    <br>
-                    <div>
-                        <span style="font-size: 10px; float:right; position:relative; top:3px; color: grey;">24h low / 24h high</span>
-                        <div style="font-size: 12px; margin-top:4px; float:right;">$0.92 / $1.45</div>
-                    </div>
-                </div>
+            <div id="coin" style="max-width: 250px;">
                 
-                <div class="middle-row" >
-                    <table style="width: 100%;">
-                        <tr>
-                            <td><span>Market cap</span></td>
-                            <td style="float:right"><span style="font-size: 10px;  color: grey;">24h volume</span></td>
-                        </tr>
-                        <tr>
-                            <td>$39,270,492</td>
-                            <td style="float:right;">$1,431,694</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="bottom-row">
-                    <table style="width: 100%;">
-                        <tr>
-                            <td><span>Circulating / Total supply</span></td>
-                        </tr>
-                        <tr>
-                            <td>24,316,392 / 34,000,000</td>
-                        </tr>
-                    </table>
-                </div>
             </div>
         </div>
     </main>
@@ -69,13 +33,13 @@
     document.getElementById("searchBar").addEventListener("keyup", ()=>{
         if (event.key === 'Enter') {search();}
     });
-    // fetch(`https://api.coingecko.com/api/v3/coins/list`)
-    // .then(response => response.json())
-    // .then(data => {
-    //     console.log(typeof(coinList))
-    //     coinList.push(data);
-    //     console.log(coinList)
-    // })
+    fetch(`https://api.coingecko.com/api/v3/coins/list`)
+    .then(response => response.json())
+    .then(data => {
+        console.log(typeof(coinList))
+        coinList.push(data);
+        console.log(coinList)
+    })
 
     function search(){
         var lookup = document.getElementById("searchBar").value;
@@ -94,25 +58,54 @@
         })
     }
 
+    fetch("https://api.coingecko.com/api/v3/coins/unifund?tickers=false&community_data=false&developer_data=false&sparkline=false")
+.then(response => response.json())
+.then(data => {console.log(data)})
     function widget(id){
         fetch(`https://api.coingecko.com/api/v3/coins/${id}?tickers=false&community_data=false&developer_data=false&sparkline=false`)
         .then(response => response.json())
         .then(data => {
             let div = document.createElement('div');
-            div.setAttribute('class', 'coin-container');
-            div.innerHTML =`
-                <div class='coin-row'>
-                    <div class='coin'>
-                        <img src=${data.image.small} alt='Coin image' />
-                        <h4>${data.name}</h4>
+            div.setAttribute('class', 'top-row');
+            div.innerHTML =`                       
+                <div class="top-row">
+                    <img style="width:32px;height:32px;float:left;" src="${data.image.small}" alt="Coin logo">
+                    <div style="float:left;font-size: 14px;    margin-left: 5px;">${data.name} 
+                        <span style="font-size:10px; color:grey; font-weight:500">[${data.symbol}]</span>
+                        <br>
+                        <span style="font-size: 10px; position: relative;  top:-1px;color: grey;">Rank: ${data.coingecko_rank}</span>
                     </div>
-                    <div class='coin-data'>
-                        <p class='coin-price'>$${data.market_data.current_price.usd}</p>
-                        <p class='coin-percent'>${data.market_data.price_change_percentage_24h.toFixed(2)}%</p>
-                        <p class='coin-marketcap'>$${data.market_data.market_cap.usd.toLocaleString()}</p>
+                    <div style="font-weight: 700; float:right;">$${data.market_data.current_price.usd}</div>
+                    <br>
+                    <div>
+                        <span style="font-size: 10px; float:right; position:relative; top:3px; color: grey;">24h low / 24h high</span>
+                        <div style="font-size: 12px; margin-top:4px; float:right;">$${data.market_data.low_24h.usd} / $${data.market_data.high_24h.usd}</div>
                     </div>
-                </div> `;
-            document.getElementById("coins").appendChild(div);
+                </div>
+                
+                <div class="middle-row" >
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><span>Market cap</span></td>
+                            <td style="float:right"><span style="font-size: 10px;  color: grey;">24h volume</span></td>
+                        </tr>
+                        <tr>
+                            <td>$${data.market_data.market_cap.usd.toLocaleString()}</td>
+                            <td style="float:right;">$${data.market_data.total_volume.usd.toLocaleString()}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="bottom-row">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><span>Circulating / Total supply</span></td>
+                        </tr>
+                        <tr>
+                            <td>${data.market_data.circulating_supply.toLocaleString()} / ${data.market_data.max_supply.toLocaleString()}</td>
+                        </tr>
+                    </table>
+                </div>`;
+            document.getElementById("coin").appendChild(div);
             document.getElementById("searchBar").value = "";
             results.innerHTML = "";
         })
