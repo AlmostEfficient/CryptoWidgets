@@ -71,45 +71,48 @@
             let div = document.createElement('div');
             div.setAttribute('class', 'top-row');
             div.innerHTML =`                       
-                <div class="top-row">
-                    <img style="width:32px;height:32px;float:left;" src="${data.image.small}" alt="Coin logo">
-                    <div style="float:left;font-size: 14px;    margin-left: 5px;">${data.name} 
-                        <span style="font-size:10px; color:grey; font-weight:500">[${data.symbol}]</span>
+                <div id="content">
+                    <div class="top-row">
+                        <img style="width:32px;height:32px;float:left;" src="${data.image.small}" alt="Coin logo">
+                        <div style="float:left;font-size: 14px;    margin-left: 5px;">${data.name} 
+                            <span style="font-size:10px; color:grey; font-weight:500">[${data.symbol}]</span>
+                            <br>
+                            <span style="font-size: 10px; position: relative;  top:-1px;color: grey;">Rank: ${data.coingecko_rank}</span>
+                        </div>
+                        <div style="font-weight: 700; float:right;">$${formattedPrice}</div>
                         <br>
-                        <span style="font-size: 10px; position: relative;  top:-1px;color: grey;">Rank: ${data.coingecko_rank}</span>
+                        <div>
+                            <span style="font-size: 10px; float:right; position:relative; top:3px; color: grey;">24h low / 24h high</span>
+                            <div style="font-size: 12px; margin-top:4px; float:right;">$${data.market_data.low_24h.usd} / $${data.market_data.high_24h.usd}</div>
+                        </div>
                     </div>
-                    <div style="font-weight: 700; float:right;">$${formattedPrice}</div>
-                    <br>
-                    <div>
-                        <span style="font-size: 10px; float:right; position:relative; top:3px; color: grey;">24h low / 24h high</span>
-                        <div style="font-size: 12px; margin-top:4px; float:right;">$${data.market_data.low_24h.usd} / $${data.market_data.high_24h.usd}</div>
+                    
+                    <div class="middle-row" >
+                        <table style="width: 100%;">
+                            <tr>
+                                <td><span>Market cap</span></td>
+                                <td style="float:right"><span style="font-size: 10px;  color: grey;">24h volume</span></td>
+                            </tr>
+                            <tr>
+                                <td>$${data.market_data.market_cap.usd.toLocaleString()}</td>
+                                <td style="float:right;">$${data.market_data.total_volume.usd.toLocaleString()}</td>
+                            </tr>
+                        </table>
                     </div>
-                </div>
-                
-                <div class="middle-row" >
-                    <table style="width: 100%;">
-                        <tr>
-                            <td><span>Market cap</span></td>
-                            <td style="float:right"><span style="font-size: 10px;  color: grey;">24h volume</span></td>
-                        </tr>
-                        <tr>
-                            <td>$${data.market_data.market_cap.usd.toLocaleString()}</td>
-                            <td style="float:right;">$${data.market_data.total_volume.usd.toLocaleString()}</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="bottom-row">
-                    <table style="width: 100%;">
-                        <tr>
-                            <td><span>Circulating / Total supply</span></td>
-                        </tr>
-                        <tr>
-                            <td>${circulatingSupply} / ${maxSupply}</td>
-                        </tr>
-                    </table>
+                    <div class="bottom-row">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td><span>Circulating / Total supply</span></td>
+                            </tr>
+                            <tr>
+                                <td>${circulatingSupply} / ${maxSupply}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>`;
             document.getElementById("coin").appendChild(div);
             document.getElementById("searchBar").value = "";
+            document.getElementById("content").replaceWith(div)
             results.innerHTML = "";
         })
         .catch(error => console.log(error))
