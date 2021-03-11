@@ -58,13 +58,16 @@
         })
     }
 
-    fetch("https://api.coingecko.com/api/v3/coins/unifund?tickers=false&community_data=false&developer_data=false&sparkline=false")
-.then(response => response.json())
-.then(data => {console.log(data)})
+//TODO Check CG total supply vs max supply
     function widget(id){
         fetch(`https://api.coingecko.com/api/v3/coins/${id}?tickers=false&community_data=false&developer_data=false&sparkline=false`)
         .then(response => response.json())
         .then(data => {
+            let formattedPrice =  (data.market_data.current_price.usd > 10 ? data.market_data.current_price.usd.toLocaleString() : data.market_data.current_price.usd);
+            let maxSupply =  (data.market_data.max_supply == null ? "N/A": data.market_data.max_supply.toLocaleString());
+            let circulatingSupply = (data.market_data.circulating_supply == null ? "N/A": data.market_data.circulating_supply.toLocaleString());
+            let mcap = (data.market_data.market_cap.usd == null ? "N/A": data.market_data.market_cap.usd.toLocaleString());
+            
             let div = document.createElement('div');
             div.setAttribute('class', 'top-row');
             div.innerHTML =`                       
@@ -75,7 +78,7 @@
                         <br>
                         <span style="font-size: 10px; position: relative;  top:-1px;color: grey;">Rank: ${data.coingecko_rank}</span>
                     </div>
-                    <div style="font-weight: 700; float:right;">$${data.market_data.current_price.usd}</div>
+                    <div style="font-weight: 700; float:right;">$${formattedPrice}</div>
                     <br>
                     <div>
                         <span style="font-size: 10px; float:right; position:relative; top:3px; color: grey;">24h low / 24h high</span>
@@ -101,7 +104,7 @@
                             <td><span>Circulating / Total supply</span></td>
                         </tr>
                         <tr>
-                            <td>${data.market_data.circulating_supply.toLocaleString()} / ${data.market_data.max_supply.toLocaleString()}</td>
+                            <td>${circulatingSupply} / ${maxSupply}</td>
                         </tr>
                     </table>
                 </div>`;
