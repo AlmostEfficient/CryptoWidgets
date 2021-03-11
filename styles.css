@@ -1,8 +1,11 @@
 body{
-    font-family: Helvetica;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 14px;
     background-color: #000000;
     color: white;
+    box-sizing: border-box;
+    margin:0;
+    padding:0;
 }
 
 /* ::selection {
