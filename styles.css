@@ -23,6 +23,15 @@ main{
     transform: translate(-50%, -50%)  */
 }
 
+td {
+    font-size: 12px;
+}
+
+td span{
+    font-size: 10px;
+    color: gray;
+}
+
 .links, .intro{
     display: flex;
     place-content: center;
