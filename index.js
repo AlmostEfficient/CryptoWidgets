@@ -1,14 +1,23 @@
 const express = require('express');
 const path = require('path');
 
+//Initialize express
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Set static files
 app.use(express.static(path.join(__dirname, "public")));
-app.set('view engine', 'html');
+
+// Set views
+app.set('views', './views')
+app.set('view engine', 'ejs');
 
 app.get("/", (req, res) => {
-    res.render("./index.html")
+    res.render("./index")
+})
+
+app.get("/coin", (req, res) => {
+    res.render("coin")
 })
 
 // app.get("/coin/:name", (req, res) => {
