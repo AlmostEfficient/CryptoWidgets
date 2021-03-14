@@ -38,6 +38,10 @@
         font-size: 12px;
         color: gray;
     }
+    img{
+        position: relative; 
+        top: 5px;
+    }
 </style>
 <body>
     <main>
@@ -93,19 +97,38 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
     const queryString = window.location.search;
     const urlParams  = new URLSearchParams(queryString);
     const id = urlParams.get('name')
+    const tvl = urlParams.get('tvl')
+    if (tvl == "yes"){
+        let tvlDiv = document.createElement('div')
+        tvlDiv.setAttribute('class', 'tvl-row')
+        tvlDiv.innerHTML = `
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="position: relative; top:-5px"><span>Total Value Locked</span></td>
+                        <td style="float:right; position: relative; top:-5px"><span style="font-size: 12px;  color: grey;">Mcap/TVL</span></td>
+                    </tr>
+                    <tr>
+                        <td class="pull" id="tvl"></td>
+                        <td class="pull" id="ratio" style="float:right;"></td>
+                    </tr>
+                </table>
+        `
+        document.getElementById("widget").appendChild(tvlDiv)
+    }
     setData(id) //Setting data on first load
     
     //Initializing refresh
     setInterval(() => {
         setData(id, true)
-    }, 3000);
-    function setData(id, isRefresh = false){
+    }, 5000);
+
+    function setData(id, isRefresh = false, hasTvl= false){
         fetch(`https://api.coingecko.com/api/v3/coins/${id}?tickers=false&community_data=false&developer_data=false&sparkline=false`)
         .then(response => response.json())
         .then(data => {
             formattedPrice =  (data.market_data.current_price.usd > 10 ? data.market_data.current_price.usd.toLocaleString() : data.market_data.current_price.usd);
-            low = (data.market_data.low_24h.usd > 999 ? data.market_data.low_24h.usd.toLocaleString() : data.market_data.low_24h);
-            high = (data.market_data.high_24h.usd > 999 ? data.market_data.high_24h.usd.toLocaleString() : data.market_data.high_24h);
+            low = (data.market_data.low_24h.usd > 999 ? data.market_data.low_24h.usd.toLocaleString() : data.market_data.low_24h.usd);
+            high = (data.market_data.high_24h.usd > 999 ? data.market_data.high_24h.usd.toLocaleString() : data.market_data.high_24h.usd);
             maxSupply =  (data.market_data.max_supply == null ? "N/A": data.market_data.max_supply.toLocaleString());
             circulatingSupply = (data.market_data.circulating_supply == null ? "N/A": data.market_data.circulating_supply.toLocaleString());
             mcap = (data.market_data.market_cap.usd == null ? "N/A": data.market_data.market_cap.usd.toLocaleString());
@@ -121,6 +144,10 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
             setHtml("volume", `$${data.market_data.total_volume.usd.toLocaleString()}`)
             setSplitStats("range", low, high);
             setSplitStats("supply", circulatingSupply, maxSupply);
+            
+            if(tvl == 'yes'){
+                setHtml("tvl", "TVL stats coming soon") //TODO Check if CoinMarketCap supports TVL stats via their API. CoinGecko does not.
+            }
         })
         .catch(error => console.log(error))
     }
