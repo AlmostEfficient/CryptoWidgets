@@ -93,33 +93,33 @@
             div.innerHTML =`                       
             <div class="grid-container">
                 <div class="grid-item-1">
-                    <img style="width:48px;height:48px;" src="${data.image.small}" alt="Coin logo">
+                    <img id="logo" style="width:48px;height:48px;" src="${data.image.small}" alt="Coin logo">
                 </div>
                 <div class="grid-item-2">
                     <div>
-                        <span style="style="font-size: 14px;"">${data.name}</span>
-                        <span style="font-size:10px; color:grey; font-weight:500">[${data.symbol}]</span>
+                        <span id="name" style="style="font-size: 14px;"">${data.name}</span>
+                        <span id="ticker" style="font-size:10px; color:grey; font-weight:500">[${data.symbol}]</span>
                     </div>
-                    <div style="font-size: 10px; color: grey;">Rank: ${data.coingecko_rank}</div>
+                    <div id="rank" style="font-size: 10px; color: grey;">Rank: ${data.coingecko_rank}</div>
                 </div>
                 <div class="grid-item-3">
-                    <div style="font-weight: 700;">$${formattedPrice}</div>    
+                    <div id="price" style="font-weight: 700;">$${formattedPrice}</div>    
                 </div>
                 <div class="grid-item-4">
                     <div style="font-size: 10px; color: grey;">24h low / 24h high</div>
-                    <div style="font-size: 12px;">$${data.market_data.low_24h.usd} / $${data.market_data.high_24h.usd}</div>
+                    <div id="range" style="font-size: 12px;">$${data.market_data.low_24h.usd} / $${data.market_data.high_24h.usd}</div>
                 </div>
                 <div class="grid-item-5">
                     <div style="font-size: 10px; color: grey;">24h volume</div>
-                    <div style="font-size: 12px;">$${data.market_data.total_volume.usd.toLocaleString()}</div>
+                    <div id="volume" style="font-size: 12px;">$${data.market_data.total_volume.usd.toLocaleString()}</div>
                 </div>
                 <div class="grid-item-6">
                     <div style="font-size: 10px; color: grey;">Circulating / Total supply</div>
-                    <div style="font-size: 12px;">${circulatingSupply} / ${maxSupply}</div>
+                    <div id="supply" style="font-size: 12px;">${circulatingSupply} / ${maxSupply}</div>
                 </div>
                 <div class="grid-item-7">
                     <div style="font-size: 10px; color: grey;">Market cap</div>
-                    <div style="font-size: 12px;">$${data.market_data.market_cap.usd.toLocaleString()}</div>
+                    <div  id="mcap" style="font-size: 12px;">$${data.market_data.market_cap.usd.toLocaleString()}</div>
                 </div>
             </div>`;
             document.getElementById("coin").appendChild(div);
