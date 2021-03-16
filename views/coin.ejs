@@ -26,64 +26,61 @@
         padding: 4px;
     }
 
-    td {
-        font-size: 14px;
+    .grid-item-1 { grid-area: g1; }
+    .grid-item-2 { grid-area: g2; }
+    .grid-item-3 { grid-area: g3; }
+    .grid-item-4 { grid-area: g4; }
+    .grid-item-5 { grid-area: g5; }
+    .grid-item-6 { grid-area: g6; }
+    .grid-item-7 { grid-area: g7; }
+    .grid-container{
+        display: grid;
+        grid-template-areas: 
+        'g1 g2 g3 g3'
+        'g1 g2 g4 g4'
+        'g7 g7 g5 g5'
+        'g6 g6 g6 g6';
+        grid-gap: 10px;
     }
 
-    .pull{
-        position: relative; top: -5px
-    }
-
-    td span{
-        font-size: 12px;
-        color: gray;
-    }
     img{
         position: relative; 
         top: 5px;
-    }
+    } 
 </style>
 <body>
     <main>
         <div id="widget" style="max-width: 260px;">
-            <div class="top-row">
-                <img id="logo" style="width:32px;height:32px;float:left;" src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png?1547033579" alt="Coin logo">
-                <div style="float:left;font-size: 16px; margin-left: 5px;">
-                    <span id="name"></span>
-                    <span id="ticker" style="font-size:12px; color:grey; font-weight:500"></span>
-                    <br>
-                    <span id="rank" style="font-size: 12px; position: relative;  top:-1px;color: grey;">Rank: </span>
+            <div class="grid-container">
+                <div class="grid-item-1">
+                    <img id="logo" style="width:48px;height:48px;" src="${data.image.small}" alt="Coin logo">
                 </div>
-                <div id="price" style="font-weight: 700; float:right;"></div>
-                <br>
-                <div>
-                    <span style="font-size: 12px; float:right; position:relative; top:3px; color: grey;">24h low / 24h high</span>
-                    <div id="range" style="font-size: 14px; margin-top:4px; float:right;"></div>
+                <div class="grid-item-2">
+                    <div>
+                        <span id="name" style="font-size: 14px;"></span>
+                        <span id="ticker" style="font-size:10px; color:grey; font-weight:500"></span>
+                    </div>
+                    <div id="rank" style="font-size: 10px; color: grey;"></div>
                 </div>
-            </div>
-            
-            <div class="middle-row" >
-                <table style="width: 100%;">
-                    <tr>
-                        <td><span>Market cap</span></td>
-                        <td style="float:right"><span style="font-size: 12px;  color: grey;">24h volume</span></td>
-                    </tr>
-                    <tr>
-                        <td class="pull" id="mcap"></td>
-                        <td class="pull" id="volume" style="float:right;"></td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="bottom-row">
-                <table style="width: 100%;">
-                    <tr>
-                        <td style="position: relative; top:-5px"><span>Circulating / Total supply</span></td>
-                    </tr>
-                    <tr>
-                        <td style="position: relative; top:-8px" id="supply" ></td>
-                    </tr>
-                </table>
+                <div class="grid-item-3">
+                    <div id="price" style="font-weight: 700;"></div>    
+                </div>
+                <div class="grid-item-4">
+                    <div style="font-size: 10px; color: grey;">24h low / 24h high</div>
+                    <div id="range" style="font-size: 12px;"></div>
+                </div>
+                <div class="grid-item-5">
+                    <div style="font-size: 10px; color: grey;">24h volume</div>
+                    <div id="volume" style="font-size: 12px;"></div>
+                </div>
+                <div class="grid-item-6">
+                    <div style="font-size: 10px; color: grey;">Circulating / Total supply</div>
+                    <div id="supply" style="font-size: 12px;"></div>
+                </div>
+                <div class="grid-item-7">
+                    <div style="font-size: 10px; color: grey;">Market cap</div>
+                    <div  id="mcap" style="font-size: 12px;"></div>
+                </div>
             </div>
         </div>
     </main>
