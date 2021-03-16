@@ -11,6 +11,24 @@
     href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>"
     />
     <!-- 📟 🔂 ⚙️ 🚀 -->
+    <style>
+        .grid-item-1 { grid-area: g1; }
+        .grid-item-2 { grid-area: g2; }
+        .grid-item-3 { grid-area: g3; }
+        .grid-item-4 { grid-area: g4; }
+        .grid-item-5 { grid-area: g5; }
+        .grid-item-6 { grid-area: g6; }
+        .grid-item-7 { grid-area: g7; }
+        .grid-container{
+            display: grid;
+            grid-template-areas: 
+            'g1 g2 g3 g3'
+            'g1 g2 g4 g4'
+            'g7 g7 g5 g5'
+            'g6 g6 g6 g6';
+            grid-gap: 10px;
+        }
+    </style>
 </head>
 <body>
     <main>
@@ -69,47 +87,41 @@
             let maxSupply =  (data.market_data.max_supply == null ? "N/A": data.market_data.max_supply.toLocaleString());
             let circulatingSupply = (data.market_data.circulating_supply == null ? "N/A": data.market_data.circulating_supply.toLocaleString());
             let mcap = (data.market_data.market_cap.usd == null ? "N/A": data.market_data.market_cap.usd.toLocaleString());
-            
+            // try to implement a table td style html
             let div = document.createElement('div');
             div.setAttribute('class', 'top-row');
             div.innerHTML =`                       
-                <div class="top-row">
-                    <img style="width:32px;height:32px;float:left;" src="${data.image.small}" alt="Coin logo">
-                    <div style="float:left;font-size: 14px;    margin-left: 5px;">${data.name} 
-                        <span style="font-size:10px; color:grey; font-weight:500">[${data.symbol}]</span>
-                        <br>
-                        <span style="font-size: 10px; position: relative;  top:-1px;color: grey;">Rank: ${data.coingecko_rank}</span>
-                    </div>
-                    <div style="font-weight: 700; float:right;">$${formattedPrice}</div>
-                    <br>
+            <div class="grid-container">
+                <div class="grid-item-1">
+                    <img style="width:48px;height:48px;" src="${data.image.small}" alt="Coin logo">
+                </div>
+                <div class="grid-item-2">
                     <div>
-                        <span style="font-size: 10px; float:right; position:relative; top:3px; color: grey;">24h low / 24h high</span>
-                        <div style="font-size: 12px; margin-top:4px; float:right;">$${data.market_data.low_24h.usd} / $${data.market_data.high_24h.usd}</div>
+                        <span style="style="font-size: 14px;"">${data.name}</span>
+                        <span style="font-size:10px; color:grey; font-weight:500">[${data.symbol}]</span>
                     </div>
+                    <div style="font-size: 10px; color: grey;">Rank: ${data.coingecko_rank}</div>
                 </div>
-                
-                <div class="middle-row" >
-                    <table style="width: 100%;">
-                        <tr>
-                            <td><span>Market cap</span></td>
-                            <td style="float:right"><span style="font-size: 10px;  color: grey;">24h volume</span></td>
-                        </tr>
-                        <tr>
-                            <td>$${data.market_data.market_cap.usd.toLocaleString()}</td>
-                            <td style="float:right;">$${data.market_data.total_volume.usd.toLocaleString()}</td>
-                        </tr>
-                    </table>
+                <div class="grid-item-3">
+                    <div style="font-weight: 700;">$${formattedPrice}</div>    
                 </div>
-                <div class="bottom-row">
-                    <table style="width: 100%;">
-                        <tr>
-                            <td><span>Circulating / Total supply</span></td>
-                        </tr>
-                        <tr>
-                            <td>${circulatingSupply} / ${maxSupply}</td>
-                        </tr>
-                    </table>
-                </div>`;
+                <div class="grid-item-4">
+                    <div style="font-size: 10px; color: grey;">24h low / 24h high</div>
+                    <div style="font-size: 12px;">$${data.market_data.low_24h.usd} / $${data.market_data.high_24h.usd}</div>
+                </div>
+                <div class="grid-item-5">
+                    <div style="font-size: 10px; color: grey;">24h volume</div>
+                    <div style="font-size: 12px;">$${data.market_data.total_volume.usd.toLocaleString()}</div>
+                </div>
+                <div class="grid-item-6">
+                    <div style="font-size: 10px; color: grey;">Circulating / Total supply</div>
+                    <div style="font-size: 12px;">${circulatingSupply} / ${maxSupply}</div>
+                </div>
+                <div class="grid-item-7">
+                    <div style="font-size: 10px; color: grey;">Market cap</div>
+                    <div style="font-size: 12px;">$${data.market_data.market_cap.usd.toLocaleString()}</div>
+                </div>
+            </div>`;
             document.getElementById("coin").appendChild(div);
             document.getElementById("searchBar").value = "";
             results.innerHTML = "";
