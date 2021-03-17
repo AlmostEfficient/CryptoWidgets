@@ -24,15 +24,22 @@ app.get("/coin", (req, res) => {
 })
 
 // TODO Better error handling and promise rejection on failure
-// Scraping Etherscan for holder count
-app.get("/holders/:contract", (req, res) => {
-    got(`https://etherscan.io/token/${req.params.contract}`)
+// Scraping Etherscan or BSCScan for holder count
+app.get("/holders/:platform/:contract", (req, res) => {
+    let endpoint = `https://etherscan.io/token/${req.params.contract}`
+    if(req.params.platform == "bsc"){endpoint = `https://bscscan.com/token/${req.params.contract}`}
+    got(endpoint)
     .then((html) => {
         const $ = cheerio.load(html.body);
         const holderDiv = $('#ContentPlaceHolder1_tr_tokenHolders');
-        // The div with class mr-3 contains the holder count, percentage change and the change graph. We only care about the holder count. 
-        // Trim the HTML (remove whitespace), split to only get what's before the first HTML element, remove all spaces  
-        res.status(200).json({holders: ((holderDiv.find('.mr-3')).html().trim().split('<')[0]).replace(" ", "")})
+        if (req.params.platform == "eth"){
+            // The div with class mr-3 contains the holder count, percentage change and the change graph. We only care about the holder count. 
+            // Trim the HTML (remove whitespace), split to only get what's before the first HTML element, remove all spaces  
+            res.status(200).json({holders: ((holderDiv.find('.mr-3')).html().trim().split('<')[0]).replace(" ", "")})
+        }
+        else(
+            res.status(200).json({holders: ((holderDiv.find('.mr-3')).text().trim().replace(" ", "").replace(/[^0-9,]+/, ''))})
+        )
     })
     .catch(error=>{
         console.log(error)

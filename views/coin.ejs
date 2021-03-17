@@ -114,6 +114,8 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
         `
         document.getElementById("widget").appendChild(tvlDiv)
     }
+    //TODO Make this a function which checks if (data.asset_platform_id == "ethereum") so that this isn't added willy nilly for non-eth addresses 
+    //TODO Add holder count checking for BSC
     if (holders == "yes"){
         let holdersDiv = document.createElement('div')
         holdersDiv.setAttribute('class', 'holders-row')
@@ -163,8 +165,8 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
             if(tvl == 'yes'){
                 setHtml("tvl", "TVL stats coming soon") //TODO Check if CoinMarketCap supports TVL stats via their API. CoinGecko does not.
             }
-            if(holders == 'yes' && !isRefresh){
-                fetch('/holders/'+data.contract_address)
+            if(holders == 'yes' && !isRefresh && data.asset_platform_id == "ethereum"){
+                fetch('/holders/eth/'+data.contract_address)
                 .then(response => response.json())
                 .then(data =>{
                     setHtml("holders", data.holders)
