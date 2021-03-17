@@ -95,6 +95,8 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
     const urlParams  = new URLSearchParams(queryString);
     const id = urlParams.get('name')
     const tvl = urlParams.get('tvl')
+    const holders = urlParams.get('holders')
+
     if (tvl == "yes"){
         let tvlDiv = document.createElement('div')
         tvlDiv.setAttribute('class', 'tvl-row')
@@ -111,6 +113,21 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
                 </table>
         `
         document.getElementById("widget").appendChild(tvlDiv)
+    }
+    if (holders == "yes"){
+        let holdersDiv = document.createElement('div')
+        holdersDiv.setAttribute('class', 'holders-row')
+        holdersDiv.innerHTML = `
+                <table style="width: 100%;">
+                    <tr>
+                        <td><span>Holder count (estimate)</span></td>
+                    </tr>
+                    <tr>
+                        <td style="position: relative; top:-5px" id="holders"></td>
+                    </tr>
+                </table>
+        `
+        document.getElementById("widget").appendChild(holdersDiv)
     }
     setData(id) //Setting data on first load
     
@@ -145,6 +162,14 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
             
             if(tvl == 'yes'){
                 setHtml("tvl", "TVL stats coming soon") //TODO Check if CoinMarketCap supports TVL stats via their API. CoinGecko does not.
+            }
+            if(holders == 'yes' && !isRefresh){
+                fetch('/holders/'+data.contract_address)
+                .then(response => response.json())
+                .then(data =>{
+                    setHtml("holders", data.holders)
+                    console.log(data.holders)
+                })
             }
         })
         .catch(error => console.log(error))
