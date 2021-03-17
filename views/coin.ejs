@@ -134,13 +134,14 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
                 document.getElementById("logo").src = data.image.small;
                 document.getElementById("ticker").innerHTML = `[${data.symbol.toUpperCase()}]`
                 setHtml("name", data.name);
+                document.title = data.name+" widget";
             }
             setHtml("rank", `Rank: ${data.coingecko_rank}`);
             setHtml("price", `$${formattedPrice}`);
             setHtml("mcap", `$${mcap}`);
             setHtml("volume", `$${data.market_data.total_volume.usd.toLocaleString()}`)
             setSplitStats("range", low, high);
-            setSplitStats("supply", circulatingSupply, maxSupply);
+            document.getElementById("supply").innerHTML =`${circulatingSupply} / ${maxSupply}`;
             
             if(tvl == 'yes'){
                 setHtml("tvl", "TVL stats coming soon") //TODO Check if CoinMarketCap supports TVL stats via their API. CoinGecko does not.

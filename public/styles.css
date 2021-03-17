@@ -8,11 +8,6 @@ body{
     padding:0;
 }
 
-/* ::selection {
-    color: black;
-    background: white;
-} */
-
 main{
     border-radius: 1em;
     padding: 1em;
@@ -21,6 +16,23 @@ main{
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%)  */
+}
+
+.grid-item-1 { grid-area: g1; }
+.grid-item-2 { grid-area: g2; }
+.grid-item-3 { grid-area: g3; }
+.grid-item-4 { grid-area: g4; }
+.grid-item-5 { grid-area: g5; }
+.grid-item-6 { grid-area: g6; }
+.grid-item-7 { grid-area: g7; }
+.grid-container{
+    display: grid;
+    grid-template-areas: 
+    'g1 g2 g3 g3'
+    'g1 g2 g4 g4'
+    'g7 g7 g5 g5'
+    'g6 g6 g6 g6';
+    grid-gap: 10px;
 }
 
 td {
