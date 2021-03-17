@@ -1,5 +1,5 @@
 const express = require('express');
-const request = require('request');
+const got = require('got');
 const path = require('path');
 require('dotenv').config();
 
@@ -27,11 +27,17 @@ app.get("/holders/:contract", (req, res) => {
     
 })
 
+// div id="ContentPlaceHolder1_tr_tokenHolders"
+// div class="mr-3"
+
 app.get("/totalSupply/:contract", (req, res) => {
-    request(`https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=${req.params.contract}&apikey=${process.env.etherscan}`, { json: true }, (err, response, body) => {
-        if (err) { return console.log(err); }
-        res.status(200).json({ totalSupply: body.result })
+    let endpoint = `https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=${req.params.contract}&apikey=${process.env.etherscan}`;
+    got.get(endpoint, {responseType: 'json'}).then(response => {
+        res.status(200).json({ totalSupply: response.body.result })
     })
+    .catch(error => {
+        console.log(error.response.body);
+    });
 })
 
 // app.get("/coin/:name", (req, res) => {
