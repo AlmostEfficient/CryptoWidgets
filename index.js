@@ -57,4 +57,15 @@ app.get("/totalSupply/:contract", (req, res) => {
     });
 })
 
+//TODO Cache the coin list in an LRU with 1 hour age instead of getting it every single time
+// Getting the list of all coins from CoinGecko
+app.get("/coinlist", (req,res) =>{
+    got.get("https://api.coingecko.com/api/v3/coins/list", {responseType: 'json'}).then(response =>{
+        res.status(200).json({coinlist: response.body})
+    })
+    .catch(error =>{
+        console.log(error);
+    })
+})
+
 app.listen(port, () => {console.log("Listening on port " + port)})

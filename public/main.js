@@ -59,11 +59,11 @@ var results = document.getElementById("results");
 document.getElementById("searchBar").addEventListener("keyup", ()=>{
     if (event.key === 'Enter') {search();}
 });
-fetch(`https://api.coingecko.com/api/v3/coins/list`)
+fetch(`/coinlist`)
 .then(response => response.json())
 .then(data => {
     console.log(typeof(coinList))
-    coinList.push(data);
+    coinList.push(data.coinlist);
     console.log(coinList)
 })
 
