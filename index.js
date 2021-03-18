@@ -2,11 +2,14 @@ const express = require('express');
 const got = require('got');
 const path = require('path');
 const cheerio = require('cheerio');
+const redis = require('redis');
 require('dotenv').config();
 
-//Initialize express
+//Initialize express and Redis
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
+const client = redis.createClient(REDIS_PORT);
 
 // Set static files
 app.use(express.static(path.join(__dirname, "public")));
@@ -14,6 +17,8 @@ app.use(express.static(path.join(__dirname, "public")));
 // Set views
 app.set('views', './views')
 app.set('view engine', 'ejs');
+
+app.listen(PORT, () => {console.log("Listening on port " + PORT)})
 
 app.get("/", (req, res) => {
     res.render("./index")
@@ -57,15 +62,30 @@ app.get("/totalSupply/:contract", (req, res) => {
     });
 })
 
-//TODO Cache the coin list in an LRU with 1 hour age instead of getting it every single time
 // Getting the list of all coins from CoinGecko
-app.get("/coinlist", (req,res) =>{
-    got.get("https://api.coingecko.com/api/v3/coins/list", {responseType: 'json'}).then(response =>{
-        res.status(200).json({coinlist: response.body})
-    })
-    .catch(error =>{
-        console.log(error);
-    })
-})
+async function getCoinList(req, res, next){
+    try{
+        console.log("Getting coin list from CoinGecko list")
+        const response = await got("https://api.coingecko.com/api/v3/coins/list", {responseType: 'json'})
+        res.status(200).json({coinList: response.body}) 
 
-app.listen(port, () => {console.log("Listening on port " + port)})
+        client.setex('coinList', 3600, JSON.stringify(response.body))
+    } catch(err){
+        console.error(err);
+        res.status(500);
+    }
+}
+
+app.get("/coinList", isListCached, getCoinList);
+
+//Cache middleware to check if the coin list has been cached 
+function isListCached(req, res, next) {
+    client.get("coinList", (err, data) => {
+        if (err) throw err;
+        if (data !== null) {
+            res.json({coinList: JSON.parse(data)});
+        } else {
+            next(); //If the list was not found, get it from CoinGecko
+        }
+    });
+}

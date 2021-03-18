@@ -59,11 +59,11 @@ var results = document.getElementById("results");
 document.getElementById("searchBar").addEventListener("keyup", ()=>{
     if (event.key === 'Enter') {search();}
 });
-fetch(`/coinlist`)
+fetch(`/coinList`)
 .then(response => response.json())
 .then(data => {
     console.log(typeof(coinList))
-    coinList.push(data.coinlist);
+    coinList.push(data.coinList);
     console.log(coinList)
 })
 
