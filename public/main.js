@@ -86,6 +86,7 @@ function search(){
 
 //TODO Check CG total supply vs max supply
 function widget(id){
+    document.getElementById("coin").innerHTML = "";
     fetch(`https://api.coingecko.com/api/v3/coins/${id}?tickers=false&community_data=false&developer_data=false&sparkline=false`)
     .then(response => response.json())
     .then(data => {
