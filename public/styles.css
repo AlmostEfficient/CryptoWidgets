@@ -18,6 +18,22 @@ main{
     transform: translate(-50%, -50%)  */
 }
 
+canvas {
+    display: block;
+    vertical-align: bottom;
+} 
+/* ---- particles.js container ---- */
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: #1d2037;
+    background-repeat: no-repeat;
+    background-size: 20%;
+    background-position: 50% 50%;
+}
+
 .grid-item-1 { grid-area: g1; }
 .grid-item-2 { grid-area: g2; }
 .grid-item-3 { grid-area: g3; }
