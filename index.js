@@ -28,28 +28,39 @@ app.get("/coin", (req, res) => {
     res.render("coin")
 })
 
+app.get("/coinList", isListCached, getCoinList);
+app.get("/holders/:platform/:contract", areHoldersCached, getHolders);
+
 // TODO Better error handling and promise rejection on failure
 // Scraping Etherscan or BSCScan for holder count
-app.get("/holders/:platform/:contract", (req, res) => {
-    let endpoint = `https://etherscan.io/token/${req.params.contract}`
-    if(req.params.platform == "bsc"){endpoint = `https://bscscan.com/token/${req.params.contract}`}
-    got(endpoint)
-    .then((html) => {
-        const $ = cheerio.load(html.body);
+async function getHolders(req, res, next){
+    try{
+        const {platform, contract} = req.params;
+        console.log("Getting holder count from "+platform)
+
+        let endpoint = `https://etherscan.io/token/${contract}`
+        if(platform == "bsc"){endpoint = `https://bscscan.com/token/${contract}`}
+
+        const response = await got(endpoint);
+        const $ = cheerio.load(response.body);
         const holderDiv = $('#ContentPlaceHolder1_tr_tokenHolders');
-        if (req.params.platform == "eth"){
+        if (platform == "eth"){
             // The div with class mr-3 contains the holder count, percentage change and the change graph. We only care about the holder count. 
             // Trim the HTML (remove whitespace), split to only get what's before the first HTML element, remove all spaces  
-            res.status(200).json({holders: ((holderDiv.find('.mr-3')).html().trim().split('<')[0]).replace(" ", "")})
+            let count = ((holderDiv.find('.mr-3')).html().trim().split('<')[0]).replace(" ", "");
+            client.setex(contract, 300, JSON.stringify(count))
+            res.status(200).json({holders: count})
         }
-        else(
-            res.status(200).json({holders: ((holderDiv.find('.mr-3')).text().trim().replace(" ", "").replace(/[^0-9,]+/, ''))})
-        )
-    })
-    .catch(error=>{
-        console.log(error)
-    })
-})
+        else{
+            let count = (holderDiv.find('.mr-3')).text().trim().replace(" ", "").replace(/[^0-9,]+/, '');
+            client.setex(contract, 300, JSON.stringify(count))
+            res.status(200).json({holders: count})
+        }
+    } catch(err){
+        console.error(err);
+        res.status(500);
+    }
+}
 // TODO Figure out apprioriate error reporting. I'll never look at the console. 
 // Using the Etherscan API for total supply supply (CG Max supply is unreliable)
 app.get("/totalSupply/:contract", (req, res) => {
@@ -76,8 +87,6 @@ async function getCoinList(req, res, next){
     }
 }
 
-app.get("/coinList", isListCached, getCoinList);
-
 //Cache middleware to check if the coin list has been cached 
 function isListCached(req, res, next) {
     client.get("coinList", (err, data) => {
@@ -86,6 +95,18 @@ function isListCached(req, res, next) {
             res.json({coinList: JSON.parse(data)});
         } else {
             next(); //If the list was not found, get it from CoinGecko
+        }
+    });
+}
+
+function areHoldersCached(req, res, next){
+    const {contract} = req.params;
+    client.get(contract, (err, data) => {
+        if (err) throw err;
+        if (data !== null) {
+            res.json({holders: JSON.parse(data)});
+        } else {
+            next();
         }
     });
 }
