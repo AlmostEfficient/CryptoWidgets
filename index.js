@@ -19,7 +19,7 @@ app.set('views', './views')
 app.set('view engine', 'ejs');
 
 app.listen(PORT, () => {console.log("Listening on port " + PORT)})
-
+if(PORT == 3000){console.log("http://localhost:3000")}
 app.get("/", (req, res) => {
     res.render("./index")
 })
@@ -61,6 +61,8 @@ async function getHolders(req, res, next){
         res.status(500);
     }
 }
+
+//TODO Upgrade to async cache pls
 // TODO Figure out apprioriate error reporting. I'll never look at the console. 
 // Using the Etherscan API for total supply supply (CG Max supply is unreliable)
 app.get("/totalSupply/:contract", (req, res) => {

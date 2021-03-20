@@ -14,23 +14,28 @@
 </head>
 <body>
     <div id="particles-js"></div> 
-    <header>
-        <h1>Crypto widgets</h1>
-    </header>
-    <main>
-        <div class="searchContainer" id="search">
-            <label for="searchBar">Search by ticker</label>
-            <input type="text" id="searchBar" onkeyup="search()" placeholder="BTC, ETH, AAVE, DOGE">
-            <div id="results">
+    <div class="centeredWrapper">
+        <div class="centeredContent">
+            <main>
+                <h1 class="title">Crypto widgets</h1>
 
-            </div>
+                <div class="searchContainer" id="search">
+                    <label for="searchBar">Search by ticker</label>
+                    <input type="text" id="searchBar" onkeyup="search()" placeholder="BTC, ETH, AAVE, DOGE">    
+                </div>
+
+                <div id="results" class="resultsContainer">
+
+                </div>
+
+                <div class="widgetContainer">
+                    <div id="coin">
+                        
+                    </div>
+                </div>
+            </main>
         </div>
-        <div id="coins" style="margin-top: 20px">
-            <div id="coin" style="max-width: 250px;">
-                
-            </div>
-        </div>
-    </main>
+    </div>
 </body>
 <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="./main.js"></script>

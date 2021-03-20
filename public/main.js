@@ -1,7 +1,7 @@
 particlesJS("particles-js", {
     particles: {
-        number: { value: 160, density: { enable: true, value_area: 800 } },
-        color: { value: "#ffffff" },
+        number: { value: 200, density: { enable: true, value_area: 800 } },
+        color: { value: ["#fff", "#7c7c7c", "#222222"] },
         shape: {
             type: "circle",
             stroke: { width: 0, color: "#000000" },
@@ -16,7 +16,7 @@ particlesJS("particles-js", {
         size: {
             value: 3,
             random: true,
-            anim: { enable: false, speed: 4, size_min: 0.3, sync: false }
+            anim: { enable: true, speed: 0.5, size_min: 0.3, sync: false }
         },
         line_linked: {
             enable: false,
@@ -72,9 +72,8 @@ function search(){
     results.innerHTML = "";
     coinList[0].forEach(coin => {
         if (coin.symbol == lookup){
-            console.log(coin)
             let div = document.createElement('div');
-            div.setAttribute('class', 'coin-container');
+            div.setAttribute('class', 'result');
             div.innerHTML = `<a href="#" onclick="widget('${coin.id}');return false;">${coin.id}</a>`
             results.appendChild(div)
         }
