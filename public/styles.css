@@ -108,6 +108,7 @@ main{
 
 .widgetContainer{
     margin-top: 30px;
+    display: inline-block;
 }
 
 /* .coin{

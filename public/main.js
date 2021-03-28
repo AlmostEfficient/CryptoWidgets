@@ -74,7 +74,7 @@ function search(){
         if (coin.symbol == lookup){
             let div = document.createElement('div');
             div.setAttribute('class', 'result');
-            div.innerHTML = `<a href="#" onclick="widget('${coin.id}');return false;">${coin.id}</a>`
+            div.innerHTML = `<a href="#" onclick="iframe('${coin.id}');return false;">${coin.id}</a>`
             results.appendChild(div)
         }
         // else if(coin.name.startsWith(lookup)){
@@ -83,54 +83,10 @@ function search(){
     })
 }
 
-//TODO Check CG total supply vs max supply
-function widget(id){
-    document.getElementById("coin").innerHTML = "";
-    fetch(`https://api.coingecko.com/api/v3/coins/${id}?tickers=false&community_data=false&developer_data=false&sparkline=false`)
-    .then(response => response.json())
-    .then(data => {
-        let formattedPrice =  (data.market_data.current_price.usd > 10 ? data.market_data.current_price.usd.toLocaleString() : data.market_data.current_price.usd);
-        let maxSupply =  (data.market_data.max_supply == null ? "N/A": data.market_data.max_supply.toLocaleString());
-        let circulatingSupply = (data.market_data.circulating_supply == null ? "N/A": data.market_data.circulating_supply.toLocaleString());
-        let mcap = (data.market_data.market_cap.usd == null ? "N/A": data.market_data.market_cap.usd.toLocaleString());
-        // try to implement a table td style html
-        let div = document.createElement('div');
-        div.setAttribute('class', 'top-row');
-        div.innerHTML =`                       
-        <div class="grid-container">
-            <div class="grid-item-1">
-                <img id="logo" style="width:48px;height:48px;" src="${data.image.small}" alt="Coin logo">
-            </div>
-            <div class="grid-item-2">
-                <div>
-                    <span id="name" style="style="font-size: 14px;"">${data.name}</span>
-                    <span id="ticker" style="font-size:10px; color:grey; font-weight:500">[${data.symbol}]</span>
-                </div>
-                <div id="rank" style="font-size: 10px; color: grey;">Rank: ${data.coingecko_rank}</div>
-            </div>
-            <div class="grid-item-3">
-                <div id="price" style="font-weight: 700;">$${formattedPrice}</div>    
-            </div>
-            <div class="grid-item-4">
-                <div style="font-size: 10px; color: grey;">24h low / 24h high</div>
-                <div id="range" style="font-size: 12px;">$${data.market_data.low_24h.usd} / $${data.market_data.high_24h.usd}</div>
-            </div>
-            <div class="grid-item-5">
-                <div style="font-size: 10px; color: grey;">24h volume</div>
-                <div id="volume" style="font-size: 12px;">$${data.market_data.total_volume.usd.toLocaleString()}</div>
-            </div>
-            <div class="grid-item-6">
-                <div style="font-size: 10px; color: grey;">Circulating / Total supply</div>
-                <div id="supply" style="font-size: 12px;">${circulatingSupply} / ${maxSupply}</div>
-            </div>
-            <div class="grid-item-7">
-                <div style="font-size: 10px; color: grey;">Market cap</div>
-                <div  id="mcap" style="font-size: 12px;">$${data.market_data.market_cap.usd.toLocaleString()}</div>
-            </div>
-        </div>`;
-        document.getElementById("coin").appendChild(div);
-        document.getElementById("searchBar").value = "";
-        results.innerHTML = "";
-    })
-    .catch(error => console.log(error))
+function iframe(id){
+    results.innerHTML = "";
+    document.querySelector(".widgetContainer").innerHTML = `
+    <iframe src="${document.location.origin}/coin?name=${id}" style="min-height: 220px; min-width: 310px; overflow:hidden;"  scrolling="auto" frameborder="0" border="0" 
+                    >Your browser does not support iframes.</iframe>
+    `
 }
