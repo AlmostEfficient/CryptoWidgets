@@ -36,7 +36,7 @@ app.get("/holders/:platform/:contract", areHoldersCached, getHolders);
 async function getHolders(req, res, next){
     try{
         const {platform, contract} = req.params;
-        console.log("Getting holder count from "+platform)
+        console.log("Getting holder count from "+platform+"scan")
 
         let endpoint = `https://etherscan.io/token/${contract}`
         if(platform == "bsc"){endpoint = `https://bscscan.com/token/${contract}`}

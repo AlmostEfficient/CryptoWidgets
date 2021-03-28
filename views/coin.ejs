@@ -13,7 +13,7 @@
 <style>
     body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 16px;
+    font-size: 18px;
     color: white;
     box-sizing: border-box;
     margin:0;
@@ -21,8 +21,7 @@
     }
 
     main{
-        padding: 2px;
-        max-width: 260px;
+        max-width: 320px;
     }
 
     .base{
@@ -43,15 +42,20 @@
     .grid-item-5 { grid-area: g5; }
     .grid-item-6 { grid-area: g6; }
     .grid-item-7 { grid-area: g7; }
+    #holdersGrid {grid-area: holders;}
+    #tvlGrid{grid-area: tvl;}
+    #ratioGrid{grid-area: ratio;}
     .grid-container{
         display: grid;
         grid-template-areas: 
         'g1 g2 g3 g3'
         'g1 g2 g4 g4'
         'g7 g7 g5 g5'
-        'g6 g6 g6 g6';
-        grid-gap: 8px;
-        padding: 4px
+        'g6 g6 g6 g6'
+        'holders holders . . '
+        'tvl tvl ratio ratio';
+        grid-gap: 6px;
+        padding: 4px 4px 0px 4px; /* Bottom padding is 0px as the grid gap from hidden grids is sufficient */
     }
 
     img{
@@ -69,7 +73,7 @@
     }
 
     a{
-        font-size:12px;
+        font-size: 0.8em;
         font-weight: 500;
         color: #9ba6bd;
         text-decoration: none;
@@ -77,25 +81,22 @@
     }
 
     .label{
-        font-size: 10px; 
+        font-size: 0.7em; 
         color: grey;
     }
 
     .data{
-        font-size: 12px;
+        font-size: 0.9em;
     }
     #price{
         font-weight: 700;
     }
     #logo{
-        width:48px;
-        height:48px;
-    }
-    #name{
-        font-size: 14px;
+        width:52px;
+        height:52px;
     }
     #ticker{
-        font-size:10px; 
+        font-size: 0.65em; 
         color:grey; 
         font-weight:500
     }
@@ -134,6 +135,18 @@
                         <div class="label">Market cap</div>
                         <div  id="mcap" class="data"></div>
                     </div>
+                    <div id="holdersGrid" hidden>
+                        <div class="label">Holders</div>
+                        <div  id="holders" class="data"></div>
+                    </div>
+                    <div id="tvlGrid" hidden>
+                        <div class="label">Total Value Locked</div>
+                        <div  id="tvl" class="data"></div>
+                    </div>
+                    <div id="ratioGrid" hidden>
+                        <div class="label">Mcap/TVL</div>
+                        <div id="ratio" class="data"></div>
+                    </div>
                 </div>
             </div>
             <div class="footer">
@@ -157,39 +170,12 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
     const holders = urlParams.get('holders')
 
     if (tvl == "yes"){
-        let tvlDiv = document.createElement('div')
-        tvlDiv.setAttribute('class', 'tvl-row')
-        tvlDiv.innerHTML = `
-                <table style="width: 100%;">
-                    <tr>
-                        <td style="position: relative; top:-5px"><span>Total Value Locked</span></td>
-                        <td style="float:right; position: relative; top:-5px"><span style="font-size: 12px;  color: grey;">Mcap/TVL</span></td>
-                    </tr>
-                    <tr>
-                        <td class="pull" id="tvl"></td>
-                        <td class="pull" id="ratio" style="float:right;"></td>
-                    </tr>
-                </table>
-        `
-        document.getElementById("widget").appendChild(tvlDiv)
+        document.getElementById("tvlGrid").hidden = false;
+        document.getElementById("ratioGrid").hidden = false;
     }
     //TODO Make this a function which checks if (data.asset_platform_id == "ethereum") so that this isn't added willy nilly for non-eth addresses 
     //TODO Add holder count checking for BSC
-    if (holders == "yes"){
-        let holdersDiv = document.createElement('div')
-        holdersDiv.setAttribute('class', 'holders-row')
-        holdersDiv.innerHTML = `
-                <table style="width: 100%;">
-                    <tr>
-                        <td><span>Holder count (estimate)</span></td>
-                    </tr>
-                    <tr>
-                        <td style="position: relative; top:-5px" id="holders"></td>
-                    </tr>
-                </table>
-        `
-        document.getElementById("widget").appendChild(holdersDiv)
-    }
+    if (holders == "yes"){document.getElementById("holdersGrid").hidden = false; }
     setData(id) //Setting data on first load
     
     //Initializing refresh
