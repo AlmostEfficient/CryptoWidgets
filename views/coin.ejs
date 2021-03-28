@@ -187,9 +187,9 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
         fetch(`https://api.coingecko.com/api/v3/coins/${id}?tickers=false&community_data=false&developer_data=false&sparkline=false`)
         .then(response => response.json())
         .then(data => {
-            formattedPrice =  (data.market_data.current_price.usd > 10 ? data.market_data.current_price.usd.toLocaleString() : data.market_data.current_price.usd);
-            low = (data.market_data.low_24h.usd > 999 ? data.market_data.low_24h.usd.toLocaleString() : data.market_data.low_24h.usd);
-            high = (data.market_data.high_24h.usd > 999 ? data.market_data.high_24h.usd.toLocaleString() : data.market_data.high_24h.usd);
+            formattedPrice =  formatPrice(data.market_data.current_price.usd, 3);
+            low = formatPrice(data.market_data.low_24h.usd);
+            high = formatPrice(data.market_data.high_24h.usd);
             maxSupply =  (data.market_data.max_supply == null ? "N/A": data.market_data.max_supply.toLocaleString());
             circulatingSupply = (data.market_data.circulating_supply == null ? "N/A": data.market_data.circulating_supply.toLocaleString());
             mcap = (data.market_data.market_cap.usd == null ? "N/A": data.market_data.market_cap.usd.toLocaleString());
@@ -249,6 +249,16 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
             })
             document.getElementById("holdersGrid").hidden = false; 
         }
+    }
+
+    function formatPrice(price, precision = 2){
+        if (price > 999){
+            return price.toLocaleString()
+        }
+        else if (price < 0.10){
+            return price.toPrecision(precision)
+        }
+        else return price;
     }
 </script>
 </html>
