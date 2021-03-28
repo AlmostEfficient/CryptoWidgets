@@ -180,7 +180,9 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
     
     //Initializing refresh
     setInterval(() => {
-        setData(id, true)
+        if (window.navigator.onLine){
+            setData(id, true)
+        }
     }, 5000);
 
     function setData(id, isRefresh = false, hasTvl= false){

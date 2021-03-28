@@ -56,6 +56,8 @@ particlesJS("particles-js", {
 
 var coinList = [];
 var results = document.getElementById("results");
+var textarea = document.getElementById("embedCode");
+
 document.getElementById("searchBar").addEventListener("keyup", ()=>{
     if (event.key === 'Enter') {search();}
 });
@@ -85,8 +87,18 @@ function search(){
 
 function iframe(id){
     results.innerHTML = "";
-    document.querySelector(".widgetContainer").innerHTML = `
-    <iframe src="${document.location.origin}/coin?name=${id}" style="min-height: 220px; min-width: 310px; overflow:hidden;"  scrolling="auto" frameborder="0" border="0" 
-                    >Your browser does not support iframes.</iframe>
-    `
+    embedCode = `<iframe 
+    src="${document.location.origin}/coin?name=${id}" style="min-height: 220px; min-width: 310px; overflow:hidden;" scrolling="auto" frameborder="0" border="0">Your browser does not support iframes.</iframe>`
+    document.querySelector(".widgetContainer").innerHTML = embedCode;
+    textarea.innerText = embedCode;
+    textarea.hidden = false;
+    document.getElementById("copy").hidden = false;
+}
+
+document.querySelector("#copy").addEventListener("click", copy);
+
+function copy(){
+    textarea.select();
+    document.execCommand("copy");
+    document.getSelection().removeAllRanges();
 }

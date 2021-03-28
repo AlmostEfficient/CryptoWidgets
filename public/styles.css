@@ -107,7 +107,7 @@ main{
 }
 
 .widgetContainer{
-    margin-top: 30px;
+    margin-top: 3px;
     display: inline-block;
 }
 
@@ -140,6 +140,32 @@ a{
 a:focus, input:focus{
     outline: none;
 }
+
+textarea{
+    background-color: #0F121A;
+    color: white;
+    border-radius: 5px;
+    width: 98%;
+    padding: 0;
+    margin: 8px 2px;
+    font-size: 16px;
+    overflow: auto;
+    box-shadow: 1px 1px 1px rgb(47, 47, 47);
+}
+
+#copy {
+    width: 150px;
+    height: 30px;
+    border-radius: 2px;
+    margin-bottom: 7px;
+    color: white;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #4801ff);
+    border: none;
+    animation: gradient 10s ease infinite;
+    background-size: 400% 400%;
+    cursor: pointer;
+}
+
 
 @keyframes gradient {
     0% {
