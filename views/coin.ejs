@@ -175,7 +175,7 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
     }
     //TODO Make this a function which checks if (data.asset_platform_id == "ethereum") so that this isn't added willy nilly for non-eth addresses 
     //TODO Add holder count checking for BSC
-    if (holders == "yes"){document.getElementById("holdersGrid").hidden = false; }
+    // if (holders == "yes"){document.getElementById("holdersGrid").hidden = false; }
     setData(id) //Setting data on first load
     
     //Initializing refresh
@@ -207,16 +207,11 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
             setSplitStats("range", low, high);
             document.getElementById("supply").innerHTML =`${circulatingSupply} / ${maxSupply}`;
             
-            if(tvl == 'yes'){
+            if(tvl == 'yes' && !isRefresh){
                 setHtml("tvl", "TVL stats coming soon") //TODO Check if CoinMarketCap supports TVL stats via their API. CoinGecko does not.
             }
-            if(holders == 'yes' && !isRefresh && data.asset_platform_id == "ethereum"){
-                fetch('/holders/eth/'+data.contract_address)
-                .then(response => response.json())
-                .then(data =>{
-                    setHtml("holders", data.holders)
-                    console.log(data.holders)
-                })
+            if(holders == 'yes' && !isRefresh){
+                getHolders(data.asset_platform_id, data.contract_address);
             }
         })
         .catch(error => console.log(error))
@@ -230,6 +225,30 @@ let formattedPrice, low, high, maxSupply, circulatingSupply, mcap;
     function setSplitStats(elementId, statOne, statTwo){
         var el = document.getElementById(elementId);
         el.innerHTML = `$${statOne} / $${statTwo}`;
+    }
+
+    function getHolders(platform, contract){
+        let chain = "Unsupported";
+        switch(platform){
+            case ("binance-smart-chain"):
+                chain = "bsc";
+                break;
+            case ("ethereum"):
+                chain = "eth";
+                break;
+            default:
+                chain = "Unsupported";
+                break;
+        }
+        if(chain != "Unsupported"){
+            fetch(`/holders/${chain}/${contract}`)
+            .then(response => response.json())
+            .then(data =>{
+                setHtml("holders", data.holders)
+                console.log(data.holders)
+            })
+            document.getElementById("holdersGrid").hidden = false; 
+        }
     }
 </script>
 </html>
