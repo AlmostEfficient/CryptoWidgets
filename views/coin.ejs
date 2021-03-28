@@ -75,6 +75,30 @@
         text-decoration: none;
         font-family: monospace;
     }
+
+    .label{
+        font-size: 10px; 
+        color: grey;
+    }
+
+    .data{
+        font-size: 12px;
+    }
+    #price{
+        font-weight: 700;
+    }
+    #logo{
+        width:48px;
+        height:48px;
+    }
+    #name{
+        font-size: 14px;
+    }
+    #ticker{
+        font-size:10px; 
+        color:grey; 
+        font-weight:500
+    }
 </style>
 <body>
     <main>
@@ -82,33 +106,33 @@
             <div id="widget">
                 <div class="grid-container">
                     <div class="grid-item-1">
-                        <img id="logo" style="width:48px;height:48px;" src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png?1547033579" alt="Coin logo">
+                        <img id="logo" src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png?1547033579" alt="Coin logo">
                     </div>
                     <div class="grid-item-2">
                         <div>
-                            <span id="name" style="font-size: 14px;"></span>
-                            <span id="ticker" style="font-size:10px; color:grey; font-weight:500"></span>
+                            <span id="name"></span>
+                            <span id="ticker"></span>
                         </div>
-                        <div id="rank" style="font-size: 10px; color: grey;"></div>
+                        <div id="rank" class="label"></div>
                     </div>
                     <div class="grid-item-3">
-                        <div id="price" style="font-weight: 700;"></div>    
+                        <div id="price"></div>    
                     </div>
                     <div class="grid-item-4">
-                        <div style="font-size: 10px; color: grey;">24h low / 24h high</div>
-                        <div id="range" style="font-size: 12px;"></div>
+                        <div class="label">24h low / 24h high</div>
+                        <div id="range" class="data"></div>
                     </div>
                     <div class="grid-item-5">
-                        <div style="font-size: 10px; color: grey;">24h volume</div>
-                        <div id="volume" style="font-size: 12px;"></div>
+                        <div class="label">24h volume</div>
+                        <div id="volume" class="data"></div>
                     </div>
                     <div class="grid-item-6">
-                        <div style="font-size: 10px; color: grey;">Circulating / Total supply</div>
-                        <div id="supply" style="font-size: 12px;"></div>
+                        <div class="label">Circulating / Total supply</div>
+                        <div id="supply" class="data"></div>
                     </div>
                     <div class="grid-item-7">
-                        <div style="font-size: 10px; color: grey;">Market cap</div>
-                        <div  id="mcap" style="font-size: 12px;"></div>
+                        <div class="label">Market cap</div>
+                        <div  id="mcap" class="data"></div>
                     </div>
                 </div>
             </div>
