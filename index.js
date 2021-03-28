@@ -9,7 +9,17 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const REDIS_PORT = process.env.REDIS_PORT || 6379;
-const client = redis.createClient(REDIS_PORT);
+
+if (process.env.REDIS_URL){
+    const client = redis.createClient(process.env.REDIS_URL);
+}
+else{
+    const client = redis.createClient(REDIS_PORT);
+}
+
+client.on("error", function (err) {
+    console.log("Error " + err);
+});
 
 // Set static files
 app.use(express.static(path.join(__dirname, "public")));
